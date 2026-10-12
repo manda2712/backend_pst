@@ -3,12 +3,12 @@ import { handleError } from '../config/utils/errorHandler.js'
 
 async function createPegawai (pegawai) {
   try {
-    const { nama, username, nik, jabatan, satuan_kerja, password, role } =
+    const { nama, username, nik, jabatan, satuan_kerja, password, role, foto } =
       pegawai
     const newPegawai = await pool.query(
-      `INSERT INTO pegawai (nama, username, nik, jabatan, satuan_kerja, password, role) VALUES  ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO pegawai (nama, username, nik, jabatan, satuan_kerja, password, role, foto) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING * `,
-      [nama, username, nik, jabatan, satuan_kerja, password, role]
+      [nama, username, nik, jabatan, satuan_kerja, password, role, foto]
     )
     return newPegawai.rows[0]
   } catch (error) {
@@ -49,7 +49,7 @@ async function getPegawaiById (id) {
 
 async function editPegawai (id, pegawai) {
   try {
-    const { nama, username, nik, jabatan, satuan_kerja, password, role } =
+    const { nama, username, nik, jabatan, satuan_kerja, password, role, foto } =
       pegawai
 
     const dataPegawai = await pool.query(
@@ -60,10 +60,11 @@ async function editPegawai (id, pegawai) {
          jabatan = COALESCE($4, jabatan),
          satuan_kerja = COALESCE($5, satuan_kerja),
          password = COALESCE($6, password),
-         role = COALESCE($7, role)
-       WHERE id = $8
+         role = COALESCE($7, role),
+          foto = COALESCE($8, foto)
+       WHERE id = $9
        RETURNING *`,
-      [nama, username, nik, jabatan, satuan_kerja, password, role, id]
+      [nama, username, nik, jabatan, satuan_kerja, password, role, foto, id]
     )
     return dataPegawai.rows[0]
   } catch (error) {

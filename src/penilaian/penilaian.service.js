@@ -13,6 +13,7 @@ async function insertPenilaian (penilaian) {
     penampilan,
     pelayanan_prima,
     keterangan_pelayanan_prima,
+    kritik_saran,
     triwulan,
     tahun
   } = penilaian
@@ -64,6 +65,7 @@ async function insertPenilaian (penilaian) {
     penampilan,
     pelayanan_prima,
     keterangan_pelayanan_prima: keteranganPelayananPrima,
+    kritik_saran,
     jumlah_nilai: jumlahNilai,
     triwulan,
     tahun
@@ -101,6 +103,7 @@ async function getAllPenilaian () {
     penampilan: data.penampilan,
     pelayanan_prima: data.pelayanan_prima,
     keterangan_pelayanan_prima: data.keterangan_pelayanan_prima,
+    kritik_saran: data.kritik_saran,
     jumlah_nilai: data.jumlah_nilai,
     triwulan: data.triwulan,
     tahun: data.tahun,
@@ -138,6 +141,7 @@ async function getPenilaianId (id) {
       penampilan: penilaian.penampilan,
       pelayanan_prima: penilaian.pelayanan_prima,
       keterangan_pelayanan_prima: penilaian.keterangan_pelayanan_prima,
+      kritik_saran: penilaian.kritik_saran,
       jumlah_nilai: penilaian.jumlah_nilai,
       triwulan: penilaian.triwulan,
       tahun: penilaian.tahun,

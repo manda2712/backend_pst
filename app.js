@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'node:path'
 import dotenv from 'dotenv'
 import './src/config/db.js'
 import pegawaiController from './src/pegawai/pegawai.controller.js'
@@ -11,6 +12,8 @@ const app = express()
 app.use(express.json())
 
 const PORT = process.env.PORT || 3000
+
+app.use('/uploads', express.static(path.resolve('uploads')))
 
 app.use('/api/pegawai', pegawaiController)
 app.use('/api/penilaian', penilaianController)

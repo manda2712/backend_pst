@@ -14,6 +14,7 @@ async function createPenilaian (penilaian) {
       penampilan,
       pelayanan_prima,
       keterangan_pelayanan_prima,
+      kritik_saran,
       jumlah_nilai,
       triwulan,
       tahun
@@ -31,11 +32,12 @@ async function createPenilaian (penilaian) {
         penampilan,
         pelayanan_prima,
         keterangan_pelayanan_prima,
+        kritik_saran,
         jumlah_nilai,
         triwulan,
         tahun
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14 )
       RETURNING *`,
       [
         id_pegawai,
@@ -48,6 +50,7 @@ async function createPenilaian (penilaian) {
         penampilan,
         pelayanan_prima,
         keterangan_pelayanan_prima,
+        kritik_saran,
         jumlah_nilai,
         triwulan,
         tahun
@@ -79,6 +82,7 @@ async function getAllPenilaian () {
         p.penampilan,
         p.pelayanan_prima,
         p.keterangan_pelayanan_prima,
+        p.kritik_saran,
         p.jumlah_nilai,
         p.triwulan,
         p.tahun,
@@ -113,6 +117,7 @@ async function getPenilaianById (id) {
         p.penampilan,
         p.pelayanan_prima,
         p.keterangan_pelayanan_prima,
+        p.kritik_saran,
         p.jumlah_nilai,
         p.triwulan,
         p.tahun,

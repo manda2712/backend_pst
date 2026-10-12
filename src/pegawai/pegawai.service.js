@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 async function insertPegawai (pegawai) {
-  const { nama, username, nik, jabatan, satuan_kerja, password, role } = pegawai
+  const { nama, username, nik, jabatan, satuan_kerja, password, role, foto } =
+    pegawai
   if (
     !nama ||
     !username ||
@@ -23,7 +24,8 @@ async function insertPegawai (pegawai) {
     jabatan,
     satuan_kerja,
     password: hashedPassword,
-    role
+    role,
+    foto: foto || null
   })
   return newPegawai
 }
@@ -76,7 +78,12 @@ async function editDataPegawai (id, pegawai) {
     throw new Error('Data Pegawai Tidak Ditemukan')
   }
 
-  const updateDataPegawai = await pegawaiRepository.editPegawai(id, pegawai)
+  const dataUpdate = { ...pegawai }
+  if (dataUpdate.password) {
+    dataUpdate.password = await bcrypt.hash(dataUpdate.password, 10)
+  }
+
+  const updateDataPegawai = await pegawaiRepository.editPegawai(id, dataUpdate)
   return updateDataPegawai
 }
 

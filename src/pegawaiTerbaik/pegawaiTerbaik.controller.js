@@ -1,8 +1,9 @@
 import express from 'express'
 const router = express.Router()
 import * as pegawaiTerbaikService from './pegawaiTerbaik.service.js'
+import authorizeJWT from '../middleware/authorizeJWT.js'
 
-router.get('/', async (req, res) => {
+router.get('/', authorizeJWT, async (req, res) => {
   try {
     const { triwulan, tahun } = req.query
 
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.get('/sertifikat', async (req, res) => {
+router.get('/sertifikat', authorizeJWT, async (req, res) => {
   try {
     const { triwulan, tahun } = req.query
 

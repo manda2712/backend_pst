@@ -1,5 +1,6 @@
 import express from 'express'
 import * as penilaianService from './penilaian.service.js'
+import adminAuthorizeJWT from '../middleware/adminAuthorizeJWT.js'
 const router = express.Router()
 
 router.post('/insert', async (req, res) => {
@@ -33,7 +34,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', adminAuthorizeJWT, async (req, res) => {
   try {
     const { id } = req.params
     const result = await penilaianService.deletePenilaian(id)
