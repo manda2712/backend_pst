@@ -32,6 +32,10 @@ async function getRankPegawai (triwulan, tahun) {
 }
 async function getPenilaianPegawaiTerbaik (id_pegawai, triwulan, tahun) {
   try {
+    console.log('Parameter getRankPegawai:', {
+      triwulan,
+      tahun
+    })
     const result = await pool.query(
       `
       SELECT

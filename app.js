@@ -5,6 +5,7 @@ import './src/config/db.js'
 import pegawaiController from './src/pegawai/pegawai.controller.js'
 import penilaianController from './src/penilaian/penilaian.controller.js'
 import pegawaiTerbaikController from './src/pegawaiTerbaik/pegawaiTerbaik.controller.js'
+import skPstController from './src/skPst/skPst.controller.js'
 dotenv.config()
 
 const app = express()
@@ -18,6 +19,7 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 app.use('/api/pegawai', pegawaiController)
 app.use('/api/penilaian', penilaianController)
 app.use('/api/pegawaiTerbaik', pegawaiTerbaikController)
+app.use('/api/sk-pst', skPstController)
 
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`)

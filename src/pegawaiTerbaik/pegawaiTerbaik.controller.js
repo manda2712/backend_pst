@@ -14,8 +14,10 @@ router.get('/', authorizeJWT, async (req, res) => {
       triwulan,
       tahun
     )
+
     res.status(200).json(pegawaiTerbaik)
   } catch (error) {
+    console.error('Error getRankPegawai:', error)
     res.status(500).json({ message: error.message })
   }
 })

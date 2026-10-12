@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
 
 async function getPegawaiTerbaik (triwulan, tahun) {
   const ranking = await pegawaiTerbaikRepository.getRankPegawai(triwulan, tahun)
@@ -37,14 +38,24 @@ async function getPegawaiTerbaik (triwulan, tahun) {
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 async function generateSertifikatPegawaiTerbaik (triwulan, tahun) {
-  // Ambil data pegawai terbaik dari service yang sudah ada
   const data = await getPegawaiTerbaik(triwulan, tahun)
 
   // Baca template PDF
-  const templatePath = path.join(__dirname, 'templates', 'contoh_serti.pdf')
+  const templatePath = path.join(
+    __dirname,
+    'templates',
+    'Sertifikat_pegawai_terbaik.pdf'
+  )
 
   const templateBytes = await fs.readFile(templatePath)
   const pdfDoc = await PDFDocument.load(templateBytes)
+  pdfDoc.registerFontkit(fontkit)
+
+  const fontBytes = await fs.readFile(
+    path.join(__dirname, 'fonts', 'GreatVibes-Regular.ttf')
+  )
+
+  const fontNama = await pdfDoc.embedFont(fontBytes)
 
   const halaman = pdfDoc.getPages()[0]
   const { width, height } = halaman.getSize()
@@ -52,31 +63,80 @@ async function generateSertifikatPegawaiTerbaik (triwulan, tahun) {
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
+  const tanggalSekarang = new Date()
+
+  const namaBulan = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+  ]
+
+  const tanggalPenerbitan =
+    `${tanggalSekarang.getDate()} ` +
+    `${namaBulan[tanggalSekarang.getMonth()]} ` +
+    `${tanggalSekarang.getFullYear()}`
+
+  const teksTanggal = `Palu, ${tanggalPenerbitan}`
+  const ukuranTanggal = 13
+
+  const lebarTanggal = fontBold.widthOfTextAtSize(teksTanggal, ukuranTanggal)
+
+  halaman.drawText(teksTanggal, {
+    x: width - lebarTanggal - 208,
+    y: height * 0.48 - 120,
+    size: ukuranTanggal,
+    font: fontBold,
+    color: rgb(0.05, 0.15, 0.35)
+  })
+
   // Nama pegawai
   const nama = data.pegawai.nama
-  const ukuranNama = nama.length > 30 ? 22 : 30
-  const lebarNama = fontBold.widthOfTextAtSize(nama, ukuranNama)
+  const ukuranNama = nama.length > 30 ? 32 : 50
+
+  const lebarNama = fontNama.widthOfTextAtSize(nama, ukuranNama)
 
   halaman.drawText(nama, {
     x: (width - lebarNama) / 2,
-    y: height * 0.48,
+    y: height * 0.48 + 40,
     size: ukuranNama,
-    font: fontBold,
-    color: rgb(0.12, 0.12, 0.12)
+    font: fontNama,
+    color: rgb(0.05, 0.15, 0.35)
   })
 
   // Keterangan penghargaan
-  const keterangan = `Sebagai Pegawai Terbaik ${triwulan} Tahun ${tahun}`
+  const barisKeterangan = [
+    'Atas pelayanan yang sigap,',
+    'cepat dan ramah serta menerapkan budaya anti korupsi',
+    'dalam memberikan pelayanan kepada konsumen data',
+    'di Badan Pusat Statistik Kota Palu',
+    `${triwulan} Tahun ${tahun}`
+  ]
 
   const ukuranKeterangan = 16
-  const lebarKeterangan = font.widthOfTextAtSize(keterangan, ukuranKeterangan)
+  const jarakBaris = 19
 
-  halaman.drawText(keterangan, {
-    x: (width - lebarKeterangan) / 2,
-    y: height * 0.35,
-    size: ukuranKeterangan,
-    font,
-    color: rgb(0.12, 0.12, 0.12)
+  // Naikkan blok keterangan agar tidak menutupi tanda tangan
+  const posisiAwalY = height * 0.48
+
+  barisKeterangan.forEach((baris, index) => {
+    const lebarBaris = font.widthOfTextAtSize(baris, ukuranKeterangan)
+
+    halaman.drawText(baris, {
+      x: (width - lebarBaris) / 2,
+      y: posisiAwalY - index * jarakBaris,
+      size: ukuranKeterangan,
+      font,
+      color: rgb(0.05, 0.15, 0.35)
+    })
   })
 
   // Simpan hasil PDF di memori
