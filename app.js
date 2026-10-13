@@ -19,7 +19,7 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 app.use('/api/pegawai', pegawaiController)
 app.use('/api/penilaian', penilaianController)
 app.use('/api/pegawaiTerbaik', pegawaiTerbaikController)
-app.use('/api/sk-pst', skPstController)
+app.use('/api/skPst', skPstController)
 
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`)

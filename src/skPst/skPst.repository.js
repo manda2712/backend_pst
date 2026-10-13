@@ -15,7 +15,7 @@ async function getSKByPeriode (tahun, triwulan) {
   return result.rows[0] ?? null
 }
 
-async function createSK (tahun, triwulan, nomorSurat) {
+async function createSK (tahun, triwulan, nomor_surat) {
   const result = await pool.query(
     `INSERT INTO sk_pst (
         tahun,
@@ -31,7 +31,7 @@ async function createSK (tahun, triwulan, nomorSurat) {
         nomor_surat,
         tanggal_penetapan,
         created_at`,
-    [tahun, triwulan, nomorSurat]
+    [tahun, triwulan, nomor_surat]
   )
 
   return result.rows[0]
@@ -39,7 +39,7 @@ async function createSK (tahun, triwulan, nomorSurat) {
 
 async function getNomorSuratTerakhir (tahun) {
   const result = await pool.query(
-    `SELECT COALESCE(MAX(nomorSurat), 0) AS nomor_terakhir
+    `SELECT COALESCE(MAX(nomor_surat), 0) AS nomor_terakhir
      FROM sk_pst
      WHERE tahun = $1`,
     [tahun]
