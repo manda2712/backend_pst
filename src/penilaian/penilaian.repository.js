@@ -137,11 +137,13 @@ async function getPenilaianById (id) {
 async function deleteDataPenilaian (id) {
   try {
     const { rowCount } = await pool.query(
-      `DELET FROM penilaian_pegawai WHERE id = $1`,
+      `DELETE FROM penilaian_pegawai WHERE id = $1`,
       [id]
     )
     return rowCount
-  } catch (error) {}
+  } catch (error) {
+    handleError(error)
+  }
 }
 
 export {
